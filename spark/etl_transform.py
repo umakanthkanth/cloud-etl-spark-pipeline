@@ -91,7 +91,7 @@ if __name__ == "__main__":
             print(f"Description: {rule[1]}")
             print(f"Failed Rows: {rule[2]}")
     else:
-        print("✅ All Data Quality Checks Passed!")
+        print("All Data Quality Checks Passed")
 
 
 
