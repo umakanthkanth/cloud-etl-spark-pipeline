@@ -25,6 +25,17 @@ def transform_sales_data(df):
     df = df.dropna(subset=required_columns)
     df = df.withColumn("Total_1958_to_1960", col("1958") + col("1959") + col("1960"))
     return df
+def run_data_quality_checks(df):
+    dq_results = []
+    # Rule: Total should be > 0
+    rule_id = "DQ001"
+    rule_description = "Total_1958_to_1960 should be greater than 0"
+    failed_count = df.filter(col("Total_1958_to_1960") <= 0).count()
+    if failed_count > 0:
+        dq_results.append((rule_id, rule_description, failed_count))
+    return dq_results
+
+
 if __name__ == "__main__":
     # Step 1: Create SparkSession
     spark = create_spark_session()
@@ -47,8 +58,16 @@ if __name__ == "__main__":
     # Optional: Show schema to verify cleaned columns
     transformed_df.printSchema()
 
-    # Optional: Preview first few rows (uncomment if needed)
-    # transformed_df.show(5)
+    dq_results = run_data_quality_checks(transformed_df)
+
+    if dq_results:
+      print("❌ Data Quality Check Failed!")
+      for rule in dq_results:
+        print(f"Rule ID: {rule[0]}")
+        print(f"Description: {rule[1]}")
+        print(f"Failed Rows: {rule[2]}")
+    else:
+        print("✅ All Data Quality Checks Passed!")
 
 
 
