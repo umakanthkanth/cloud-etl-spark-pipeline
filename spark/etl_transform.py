@@ -1,7 +1,9 @@
 from pyspark.sql import SparkSession
 from pyspark.sql.functions import col
+
+# Step 1: Spark session
 def create_spark_session():
-  spark = SparkSession.builder \
+    spark = SparkSession.builder \
         .appName("StoreSalesETL") \
         .config("spark.executor.memory", "2g") \
         .config("spark.driver.memory", "2g") \
@@ -9,25 +11,46 @@ def create_spark_session():
         .config("spark.sql.shuffle.partitions", "8") \
         .config("spark.sql.autoBroadcastJoinThreshold", "-1") \
         .getOrCreate()
-  return spark
+    return spark
+
+# Step 2: Load data
 def load_sales_data(spark, file_path):
     df = spark.read \
         .option("header", "true") \
         .option("inferSchema", "true") \
+        .option("quote", '"') \
         .csv(file_path)
+        
     df.printSchema()
     df.show(5, truncate=False)
     return df
+
+
+# Step 3: Transform data
 def transform_sales_data(df):
+    # Clean column names: strip spaces and quotes
+    cleaned_columns = []
     for col_name in df.columns:
-        df = df.withColumnRenamed(col_name, col_name.strip().replace(" ", "_"))
-    required_columns = ["Month", "1958", "1959", "1960"]  # Adjust if different in your data
+        cleaned = col_name.strip().replace(" ", "_").replace('"', '')
+        df = df.withColumnRenamed(col_name, cleaned)
+        cleaned_columns.append(cleaned)
+
+    # Confirm names are cleaned
+    print("Cleaned Columns:", cleaned_columns)
+
+    # Define required columns for DQ
+    required_columns = ["Month", "1958", "1959", "1960"]
     df = df.dropna(subset=required_columns)
+
+    # Add derived column
     df = df.withColumn("Total_1958_to_1960", col("1958") + col("1959") + col("1960"))
+
     return df
+
+
+# Step 4: Run DQ checks
 def run_data_quality_checks(df):
     dq_results = []
-    # Rule: Total should be > 0
     rule_id = "DQ001"
     rule_description = "Total_1958_to_1960 should be greater than 0"
     failed_count = df.filter(col("Total_1958_to_1960") <= 0).count()
@@ -35,7 +58,7 @@ def run_data_quality_checks(df):
         dq_results.append((rule_id, rule_description, failed_count))
     return dq_results
 
-
+# Main block
 if __name__ == "__main__":
     # Step 1: Create SparkSession
     spark = create_spark_session()
@@ -58,16 +81,18 @@ if __name__ == "__main__":
     # Optional: Show schema to verify cleaned columns
     transformed_df.printSchema()
 
+    # Step 5: Run DQ check
     dq_results = run_data_quality_checks(transformed_df)
 
     if dq_results:
-      print("❌ Data Quality Check Failed!")
-      for rule in dq_results:
-        print(f"Rule ID: {rule[0]}")
-        print(f"Description: {rule[1]}")
-        print(f"Failed Rows: {rule[2]}")
+        print("❌ Data Quality Check Failed!")
+        for rule in dq_results:
+            print(f"Rule ID: {rule[0]}")
+            print(f"Description: {rule[1]}")
+            print(f"Failed Rows: {rule[2]}")
     else:
         print("✅ All Data Quality Checks Passed!")
+
 
 
 
