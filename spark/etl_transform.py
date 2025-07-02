@@ -20,7 +20,8 @@ def load_sales_data(spark, file_path):
     return df
 if __name__ == "__main__":
     spark = create_spark_session()
-    file_path = "/content/store_sales.csv"  # Replace with GCS path later
+    file_path = "https://raw.githubusercontent.com/selva86/datasets/master/supermarket_sales.csv"
     sales_df = load_sales_data(spark, file_path)
     sales_df.show(5)
+
 
