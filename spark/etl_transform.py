@@ -4,11 +4,6 @@ from oauth2client.service_account import ServiceAccountCredentials
 from gspread_dataframe import set_with_dataframe
 import gspread
 import os
-load_dotenv()
-# Not used in this version, but ready for alerts
-SENDGRID_API_KEY = os.getenv("SENDGRID_API_KEY")
-ALERT_FROM_EMAIL = os.getenv("ALERT_FROM_EMAIL")
-ALERT_TO_EMAIL = os.getenv("ALERT_TO_EMAIL")
 scope = ["https://spreadsheets.google.com/feeds", "https://www.googleapis.com/auth/drive"]
 creds = ServiceAccountCredentials.from_json_keyfile_name("/content/beaming-park-464705-d9-12b873d9a2a9.json", scope)
 client = gspread.authorize(creds)
