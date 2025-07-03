@@ -64,48 +64,7 @@ def run_data_quality_checks(df):
         dq_results.append((rule_id, rule_description, failed_count))
     return dq_results
     
-def send_dq_alert(failed_rules):
-    subject = "❌ Data Quality Alert - DQ Check Failed"
-    content_lines = ["One or more DQ checks failed in your ETL pipeline:\n"]
-    
-    for rule_id, description, count in failed_rules:
-        content_lines.append(f"🔹 Rule ID: {rule_id}")
-        content_lines.append(f"   Description: {description}")
-        content_lines.append(f"   Failed Rows: {count}\n")
-    
-    email_body = "\n".join(content_lines)
 
-    message = Mail(
-        from_email=ALERT_FROM_EMAIL,
-        to_emails=ALERT_TO_EMAIL,
-        subject=subject,
-        plain_text_content=email_body
-    )
-
-    try:
-        sg = SendGridAPIClient(SENDGRID_API_KEY)
-        response = sg.send(message)
-        print(f"✅ Alert sent! Status Code: {response.status_code}")
-    except Exception as e:
-        print(f"❌ Failed to send alert: {str(e)}")
-
-def send_dq_alert_success():
-    subject = "✅ Data Quality Check Passed"
-    content = "All DQ checks passed successfully in your ETL pipeline. No issues found."
-
-    message = Mail(
-        from_email=ALERT_FROM_EMAIL,
-        to_emails=ALERT_TO_EMAIL,
-        subject=subject,
-        plain_text_content=content
-    )
-
-    try:
-        sg = SendGridAPIClient(SENDGRID_API_KEY)
-        response = sg.send(message)
-        print(f"✅ Success alert sent! Status Code: {response.status_code}")
-    except Exception as e:
-        print(f"❌ Failed to send success alert: {str(e)}")
 # Main block
 if __name__ == "__main__":
     # Step 1: Create SparkSession
@@ -140,7 +99,7 @@ if __name__ == "__main__":
             print(f"Failed Rows: {rule[2]}")
     else:
         print("All Data Quality Checks Passed")
-    send_dq_alert_success()
+    
     
 
 
