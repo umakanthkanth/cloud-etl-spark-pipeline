@@ -48,7 +48,7 @@ def run_data_quality_checks(df):
     return dq_results
 if __name__ == "__main__":
     spark = create_spark_session()
-    file_path = "/content/airtravel.csv"
+    file_path = "airtravel.csv"
     sales_df = load_sales_data(spark, file_path)
     print("Before transformation (row count):", sales_df.count())
     transformed_df = transform_sales_data(sales_df)
