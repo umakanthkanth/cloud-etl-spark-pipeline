@@ -1,6 +1,17 @@
 from airflow import DAG
 from airflow.operators.bash import BashOperator
+from airflow.operators.python import PythonOperator
 from datetime import datetime, timedelta
+import os
+import shutil
+def setup_gcp_credentials():
+    secret_path = os.path.join(os.path.dirname(__file__), "..", "..", "sheet-key.json")
+    target_path = "/opt/airflow/sheet-key.json"
+    shutil.copyfile(secret_path, target_path)
+    os.environ["GOOGLE_APPLICATION_CREDENTIALS"] = target_path
+def run_spark_etl():
+    setup_gcp_credentials()
+    os.system("python /opt/airflow/spark/etl_transform.py")
 default_args = {
     'owner': 'umakanth',
     'depends_on_past': False,
