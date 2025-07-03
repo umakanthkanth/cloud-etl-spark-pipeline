@@ -1,8 +1,5 @@
-#!pip install python-dotenv
-#!pip install sendgrid
-!wget https://people.sc.fsu.edu/~jburkardt/data/csv/airtravel.csv \
-  -O /content/airtravel.csv
-!pip install --upgrade gspread gspread_dataframe oauth2client -q
-upload google api to colab
-!git clone https://github.com/umakanthkanth/cloud-etl-spark-pipeline.git
-!python3 spark/etl_transform.py
+apache-airflow==2.7.2
+pyspark==3.4.1
+gspread==5.11.3
+oauth2client==4.1.3
+python-dotenv==1.0.1
