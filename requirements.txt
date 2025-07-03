@@ -2,3 +2,5 @@
 #!pip install sendgrid
 !wget https://people.sc.fsu.edu/~jburkardt/data/csv/airtravel.csv \
   -O /content/airtravel.csv
+!pip install --upgrade gspread gspread_dataframe oauth2client -q
+
