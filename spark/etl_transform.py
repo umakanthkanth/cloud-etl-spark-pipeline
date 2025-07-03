@@ -110,4 +110,7 @@ if __name__ == "__main__":
         # ✅ Step 9: Convert Spark → Pandas → Google Sheet
         pandas_df = transformed_df.toPandas()
         set_with_dataframe(sheet, pandas_df)
-        print("✅ Data successfully written to Google Sheet!")
+        print("Data successfully written to Google Sheet!")
+        spreadsheet.share('anilent8@gmail.com', perm_type='user', role='writer')
+        print("Shared Google Sheet with your Gmail account!")
+        print("Sheet URL:", spreadsheet.url)
