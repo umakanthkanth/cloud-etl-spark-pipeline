@@ -4,3 +4,5 @@
   -O /content/airtravel.csv
 !pip install --upgrade gspread gspread_dataframe oauth2client -q
 upload google api to colab
+!git clone https://github.com/umakanthkanth/cloud-etl-spark-pipeline.git
+!python3 spark/etl_transform.py
