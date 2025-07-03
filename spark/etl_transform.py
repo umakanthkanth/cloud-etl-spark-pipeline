@@ -4,16 +4,6 @@ from oauth2client.service_account import ServiceAccountCredentials
 from gspread_dataframe import set_with_dataframe
 import gspread
 import os
-import shutil
-def setup_gcp_credentials():
-    # Path to the secret file inside the Render Airflow container
-    secret_path = os.path.join(os.path.dirname(__file__), "..", "..", "sheet-key.json")
-    target_path = "/opt/airflow/sheet-key.json"
-
-    # Copy file and set env variable
-    shutil.copyfile(secret_path, target_path)
-    os.environ["GOOGLE_APPLICATION_CREDENTIALS"] = target_path
-
 scope = ["https://spreadsheets.google.com/feeds", "https://www.googleapis.com/auth/drive"]
 creds = ServiceAccountCredentials.from_json_keyfile_name("/content/beaming-park-464705-d9-12b873d9a2a9.json", scope)
 client = gspread.authorize(creds)
