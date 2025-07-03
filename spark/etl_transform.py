@@ -1,13 +1,9 @@
 from pyspark.sql import SparkSession
 from pyspark.sql.functions import col
-from dotenv import load_dotenv
-from sendgrid import SendGridAPIClient
-from sendgrid.helpers.mail import Mail
-import os
-load_dotenv()
-SENDGRID_API_KEY = os.getenv("SENDGRID_API_KEY")
-ALERT_FROM_EMAIL = os.getenv("ALERT_FROM_EMAIL")
-ALERT_TO_EMAIL = os.getenv("ALERT_TO_EMAIL")
+import gspread
+from gspread_dataframe import set_with_dataframe
+from oauth2client.service_account import ServiceAccountCredentials
+import pandas as pd
 def create_spark_session():
     spark = SparkSession.builder \
         .appName("StoreSalesETL") \
