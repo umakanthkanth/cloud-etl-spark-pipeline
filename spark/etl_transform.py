@@ -56,14 +56,14 @@ if __name__ == "__main__":
     transformed_df.printSchema()
     dq_results = run_data_quality_checks(transformed_df)
     if dq_results:
-        print("❌ Data Quality Check Failed!")
+        print("Data Quality Check Failed!")
         for rule in dq_results:
             print(f"Rule ID: {rule[0]}")
             print(f"Description: {rule[1]}")
             print(f"Failed Rows: {rule[2]}")
     else:
-        print("✅ All Data Quality Checks Passed!")
-        # ✅ Step 8: Create or open sheet safely
+        print("All Data Quality Checks Passed!")
+        # Step 8: Create or open sheet safely
         sheet_title = "store_sales_output"
         try:
             spreadsheet = client.open(sheet_title)
